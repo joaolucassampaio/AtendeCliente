@@ -59,39 +59,41 @@ public class UsaCliente {
 				return;
 			}
 		}
-		InOut.msgDeAviso(null, "Senha não encontrada!"); //Se a senha não existir, mostra uma mensagem na tela
+		InOut.msgDeAviso(null, "Senha não encontrada!");
 	}
 
 	private static void atendimento(ArrayList<Cliente> listaDeClientes) {
-		if(listaDeClientes.isEmpty()) { //Verifica se a lista está vazia
-			InOut.msgDeAviso(null, "Não há clientes na fila de atendimento!");
-		} else {
-			int senhaDeAtendimento = Cliente.proximo();//Passa para a próxima senha
-			Cliente clienteAtendido = null;
-			for(int i=0; i<listaDeClientes.size(); i++) { //Procura no ArrayList o cliente que possui a senha igual a senha de atendimento
-				int senhaDoCliente = listaDeClientes.get(i).getSenhaDoCliente();
-				if(senhaDeAtendimento == senhaDoCliente) {
-					clienteAtendido = listaDeClientes.get(i);
-					listaDeClientes.remove(i);
-					break;
-				}
-			}
-			if(clienteAtendido != null) {
-				InOut.msgSemIcone(null, "Cliente que será atendido:\n" +
-		                "Nome: " + clienteAtendido.getNome() +
-		                "\nSenha: " + clienteAtendido.getSenhaDoCliente());
-			} else {
-				InOut.msgDeErro(null, "Não existe cliente com a senha " + senhaDeAtendimento + 
-						"!\nPassando para o próximo...");
-				//Se não tiver essa senha, deve mostra uma mensagem na tela e passar para a próxima senha (????)
-				//senhaDeAtendimento = Cliente.proximo();  --- Se fizer da forma que foi pedido, irá pular uma senha
-			}
-		}
+		while(listaDeClientes.isEmpty() != true) {
+            int senhaDeAtendimento = Cliente.getSenhaDeAtendimento();
+            Cliente clienteAtendido = null;
+
+            senhaDeAtendimento = Cliente.proximo();
+
+            for (int j = 0; j < listaDeClientes.size(); j++) {
+                int senhaDoUsuario = listaDeClientes.get(j).getSenhaDoCliente();
+                if (senhaDeAtendimento == senhaDoUsuario) {
+                    clienteAtendido = listaDeClientes.get(j);
+                    listaDeClientes.remove(j);
+                    break;
+                }
+            }
+
+            if (clienteAtendido != null) {
+                InOut.msgSemIcone(null, "Cliente que será atendido:\n" +
+                        "Nome: " + clienteAtendido.getNome() +
+                        "\nSenha: " + clienteAtendido.getSenhaDoCliente());
+            } else {
+                InOut.msgDeErro(null, "Não existe cliente com a senha " + senhaDeAtendimento +
+                        "!\nPassando para o próximo...");
+                //senhaDeAtendimento = Cliente.proximo();
+            }
+        }
+		InOut.msgDeAviso(null, "Não há clientes na fila de atendimento!");
 	}
 	
 	private static void gerarSenha(ArrayList<Cliente> listaDeClientes) {
-		String nome = InOut.leString("Digite o seu nome:");//pediu o nome
-		Cliente cliente = new Cliente(nome);//instanciou o objeto Cliente
+		String nome = InOut.leString("Digite o seu nome:");
+		Cliente cliente = new Cliente(nome);
 		listaDeClientes.add(cliente);
 		
 		InOut.msgDeInformacao(null, "Nome do usuário: " + cliente.getNome() +
