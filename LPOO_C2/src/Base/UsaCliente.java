@@ -28,8 +28,11 @@ public class UsaCliente {
 				break;
 				
 			case "5":
-				InOut.msgDeAviso(null, "Encerando o programa...");
+				InOut.msgDeAviso("Encerrando...", "Encerando o programa...");
 				break;
+				
+			default:
+                InOut.msgDeErro("Erro", "Opcao invalida! Tente novamente.");
 			}
 		} while(!opcao.equals("5"));
 		InOut.msgDeAviso(null, "Programa encerrado com sucesso!");
@@ -37,29 +40,33 @@ public class UsaCliente {
 
 	private static void clientesNaoAtendidos(ArrayList<Cliente> listaDeClientes) {
 		if(listaDeClientes.isEmpty()) {
-			InOut.msgDeAviso(null, "Não há clientes a serem atendidos no momento!");
+			InOut.msgDeAviso("Alerta!", "Não há clientes a serem atendidos no momento!");
 			return;
 		}
 		for(int i=0; i<listaDeClientes.size(); i++) {
-			InOut.msgSemIcone("Senhas não atendidas:", "Cliente: " + 
+			InOut.msgSemIcone("Clientes não atendidos:", "Cliente: " + 
 					listaDeClientes.get(i).getNome() + 
 					"\nSenha: " + listaDeClientes.get(i).getSenhaDoCliente());
 		}
 	}
 
 	private static void sairDaFila(ArrayList<Cliente> listaDeClientes) {
-		int inputSenhaDoCliente = InOut.leInt("Por favor, informe a sua senha:");
-		int senhaDoCliente;
-		
-		for(int i=0; i<listaDeClientes.size(); i++) {
-			senhaDoCliente = listaDeClientes.get(i).getSenhaDoCliente();
-			if(inputSenhaDoCliente == senhaDoCliente) {
-				listaDeClientes.remove(i);
-				InOut.msgDeAviso(null, "A senha " + senhaDoCliente + " foi removida com sucesso!");
-				return;
+		if(listaDeClientes.isEmpty()) {
+			InOut.msgDeAviso("Alerta!", "Não há clientes na fila!");
+		} else {
+			int inputSenhaDoCliente = InOut.leInt("Por favor, informe a sua senha:");
+			int senhaDoCliente;
+			
+			for(int i=0; i<listaDeClientes.size(); i++) {
+				senhaDoCliente = listaDeClientes.get(i).getSenhaDoCliente();
+				if(inputSenhaDoCliente == senhaDoCliente) {
+					listaDeClientes.remove(i);
+					InOut.msgDeAviso(null, "A senha " + senhaDoCliente + " foi removida com sucesso!");
+					return;
+				}
 			}
+			InOut.msgDeAviso("Alerta!", "Senha não encontrada!");			
 		}
-		InOut.msgDeAviso(null, "Senha não encontrada!");
 	}
 
 	private static void atendimento(ArrayList<Cliente> listaDeClientes) {
@@ -91,7 +98,6 @@ public class UsaCliente {
             	} else {
             		InOut.msgDeErro(null, "Não existe cliente com a senha " + senhaDeAtendimento +
             				"!\nPassando para o próximo...");
-            		//senhaDeAtendimento = Cliente.proximo();
             	}
             }
         }
